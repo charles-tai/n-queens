@@ -73,22 +73,43 @@ window.countNRooksSolutions = function(n) {
       }
     }
 
+    var startBoardStringified = JSON.stringify(startBoard);
+    console.log(startBoardStringified);
+    if (!_.contains(allBoards, startBoardStringified)) {
+      allBoards.push(startBoardStringified);
+    }
 
-    debugger;
-    console.log(startBoard);
+    var startBoardFlip = startBoard.reverse();
+    var startBoardStringified = JSON.stringify(startBoardFlip);
 
-    // push solution to allBoards;
-    allBoards.push(startBoard);
-    if (row < n-1 ) {
+    if (!_.contains(allBoards, startBoardStringified)) {
+      allBoards.push(startBoardStringified);
+    }
+
+    var startBoardReverse = startBoard;
+    _.each(startBoardReverse, function (row) {
+        row = row.reverse();
+    });
+
+    var startBoardStringified = JSON.stringify(startBoardReverse);
+
+    if (!_.contains(allBoards, startBoardStringified)) {
+      allBoards.push(startBoardStringified);
+    }
+
+    if (row < n) {
       if (column < n-1) {
         findSolution(row,++column);
       } else {
-        findSolution(++row,column);
+        if (row < n-1 ) {
+          findSolution(++row,0);
+        }
       }
     }
+
   };
   findSolution(0,0);
-  console.log('allBoards.length');
+  console.log(allBoards);
   console.log(allBoards.length);
   // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
 

@@ -1,3 +1,5 @@
+/* global _ */
+
 // This file is a Backbone Model (don't worry about what that means)
 // It's part of the Board Visualizer
 // The only portions you need to work on are the helper functions (below)
@@ -82,27 +84,23 @@
       var count = 0;
       var row = this.rows()[rowIndex];
       _.each(row, function (square) {
-        console.log(row);
+        // console.log(row);
         if (square === 1) {
           count++;
         }
-      })
-      console.log(count > 1);
+      });
+      // console.log(count > 1);
       return count > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      console.log(this);
-      var context = this;
-      _.each(context.rows(), function (row) {
-        for (var i = 0; i < row.length; i++) {
-          if (context.hasRowConflictAt(i)) {
-            console.log('true');
-            return true;
-          }
+      var allRows = this.rows();
+      for (var i = 0; i < allRows.length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
         }
-      })
+      }
       return false;
     },
 
@@ -113,12 +111,23 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var allRows = this.rows();
+      var count = 0;
+      for (var i = 0; i < allRows.length; i++) {
+        count += allRows[i][colIndex];
+      }
+      return count > 1 ;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var allRows = this.rows();
+      for (var i = 0; i < allRows.length; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 

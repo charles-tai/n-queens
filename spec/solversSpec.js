@@ -8,6 +8,8 @@ describe('solvers', function() {
         var solutionBoard = new Board(findNRooksSolution(n));
 
         expect(solutionBoard.get('n')).to.equal(n);
+        console.log(n);
+        console.log(solutionBoard.hasAnyRooksConflicts());
         expect(solutionBoard.hasAnyRooksConflicts()).to.be.equal(false);
       });
     });

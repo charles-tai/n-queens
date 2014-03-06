@@ -12,7 +12,17 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-
+ // old logic: create board
+  // var allRows = []; //fixme
+  // var solution;
+  // // create array;
+  // for (var i = 0; i < n; i++){
+  //   var row = [];
+  //   for (var j = 0; j < n; j++) {
+  //     row.push(0);
+  //   }
+  //   allRows.push(row.slice(0));
+  // }
 window.findNRooksSolution = function(n) {
   var board = new Board({n: n});
   var allRows = board.rows();
@@ -31,29 +41,60 @@ window.findNRooksSolution = function(n) {
     }
   }
 
-  console.log(allRows);
+  // console.log(allRows);
   // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return allRows;
 };
-  // old logic: create board
-  // var allRows = []; //fixme
-  // var solution;
-  // // create array;
-  // for (var i = 0; i < n; i++){
-  //   var row = [];
-  //   for (var j = 0; j < n; j++) {
-  //     row.push(0);
-  //   }
-  //   allRows.push(row.slice(0));
-  // }
-
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+
+
+  var allBoards = [];
+  var solutionCount = allBoards.length;
+ //  var startRow = 0;
+ //  for (var i=startRow; i<allRows.length; i++){
+  var findSolution = function (row,column) {
+    row = row || 0;
+    column = column || 0;
+    var board = new Board({n: n});
+    var startBoard = board.rows();
+    startBoard[row][column] = 1;
+    // iterate through each row
+    for (var r = 0; r < startBoard.length; r++) {
+      // iterate through each column
+      for (var c = 0; c < startBoard.length; c++) {
+        if (startBoard[r][c] !== 1) {
+          startBoard[r][c] = 1;
+          if (board.hasColConflictAt(c) || board.hasRowConflictAt(r)){
+            startBoard[r][c] -= 1;
+          }
+        }
+      }
+    }
+
+
+    debugger;
+    console.log(startBoard);
+
+    // push solution to allBoards;
+    allBoards.push(startBoard);
+    if (row < n-1 ) {
+      if (column < n-1) {
+        findSolution(row,++column);
+      } else {
+        findSolution(++row,column);
+      }
+    }
+  };
+  findSolution(0,0);
+  console.log('allBoards.length');
+  console.log(allBoards.length);
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  //return solutionCount;
+  return allBoards.length;
 };
 
 

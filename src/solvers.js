@@ -49,73 +49,34 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
 
+  var Tree = function (n) {
+    this.board = new Board({n:n});
+    this.matrix = this.board.rows();
+    this.children = [];
+  }
 
-  var allBoards = [];
-  var solutionCount = allBoards.length;
- //  var startRow = 0;
- //  for (var i=startRow; i<allRows.length; i++){
-  var findSolution = function (row,column) {
-    row = row || 0;
-    column = column || 0;
-    var board = new Board({n: n});
-    var startBoard = board.rows();
-    startBoard[row][column] = 1;
-    // iterate through each row
-    for (var r = 0; r < startBoard.length; r++) {
-      // iterate through each column
-      for (var c = 0; c < startBoard.length; c++) {
-        if (startBoard[r][c] !== 1) {
-          startBoard[r][c] = 1;
-          if (board.hasColConflictAt(c) || board.hasRowConflictAt(r)){
-            startBoard[r][c] -= 1;
-          }
-        }
-      }
+  var tree = new Tree(n);
+  console.log(tree);
+  Tree.prototype.createNodes = function (row,column) {
+    var newTree =  new Tree(n);
+    // toggle;
+    newTree.board.togglePiece(row,column);
+    this.children.push(newTree);
+    // untoggle;
+    newTree.board.togglePiece(row,column);
+    this.children.push(newTree);
+    if (column < n) {
+      newTree.createNodes(0,++column);
     }
-
-    var startBoardStringified = JSON.stringify(startBoard);
-    console.log(startBoardStringified);
-    if (!_.contains(allBoards, startBoardStringified)) {
-      allBoards.push(startBoardStringified);
-    }
-
-    var startBoardFlip = startBoard.reverse();
-    var startBoardStringified = JSON.stringify(startBoardFlip);
-
-    if (!_.contains(allBoards, startBoardStringified)) {
-      allBoards.push(startBoardStringified);
-    }
-
-    var startBoardReverse = startBoard;
-    _.each(startBoardReverse, function (row) {
-        row = row.reverse();
-    });
-
-    var startBoardStringified = JSON.stringify(startBoardReverse);
-
-    if (!_.contains(allBoards, startBoardStringified)) {
-      allBoards.push(startBoardStringified);
-    }
-
-    if (row < n) {
-      if (column < n-1) {
-        findSolution(row,++column);
-      } else {
-        if (row < n-1 ) {
-          findSolution(++row,0);
-        }
-      }
-    }
-
   };
-  findSolution(0,0);
-  console.log(allBoards);
-  console.log(allBoards.length);
-  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  //return solutionCount;
-  return allBoards.length;
+  tree.createNodes(0,0);
+
+  console.log('tree');
+  console.log(tree);
+  // create 2 new boards
+  // 0,0 with toggle, other no toggle
+
 };
 
 
